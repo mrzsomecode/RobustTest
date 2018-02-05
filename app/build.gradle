@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+//制作补丁时将这个打开，auto-patch-plugin紧跟着com.android.application
+apply plugin: 'auto-patch-plugin'
+//apply plugin: 'robust'
+
+//gradlew clean  assembleRelease --stacktrace --no-daemon
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.zxz.robusttest"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    //签名打包配置
+    signingConfigs {
+        releaseConfig {
+            keyAlias "test"
+            keyPassword "123456"
+            storeFile file("robustTest.jks")
+            storePassword "123456"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.releaseConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.meituan.robust:robust:0.4.75'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
